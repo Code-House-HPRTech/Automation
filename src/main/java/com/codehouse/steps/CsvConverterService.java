@@ -5,9 +5,8 @@
 
 package com.codehouse.steps;
 
-import com.codehouse.contants.Constant;
 import com.codehouse.dto.WordpressPost;
-import com.codehouse.util.Utils;
+import com.codehouse.util.WordPressUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVWriter;
@@ -17,29 +16,33 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.stream.StreamSupport;
 
 public class CsvConverterService {
 
-    public static void convertBatchToCsv(String postJsonFilePath, String csvFolderPath) throws IOException {
+    public static void convertBatchToCsv(String postJsonFilePath, String mediaJsonFilePath, String csvFolderPath) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         List<WordpressPost> postDTOList = new ArrayList<>();
+
+        // Get Media Map
+        Map<Integer, String> mediaMap = WordPressUtils.getRemoteMediaMap(mediaJsonFilePath);
 
         List<JsonNode> myObjects = objectMapper.readValue(
                 new File(postJsonFilePath),
                 objectMapper.getTypeFactory().constructCollectionType(List.class, JsonNode.class));
 
         for (JsonNode jsonNode : myObjects) {
+            String featureMediaImgTag = Optional.ofNullable(mediaMap.get(jsonNode.get("featured_media").asInt()))
+                    .filter(url -> !url.isEmpty())
+                    .map(url -> String.format("<img src=\"%s\">\n", url))
+                    .orElse("");
+
             postDTOList.add(WordpressPost.builder()
                     .id(jsonNode.get("id").asInt())
                     .title(jsonNode.get("title").get("rendered").asText())
-                    .content(jsonNode.get("content").get("rendered").asText())
+                    .content(featureMediaImgTag + jsonNode.get("content").get("rendered").asText())
                     .excerpt(jsonNode.get("excerpt").get("rendered").asText())
-                    .featureImage(jsonNode.get("featured_media").asInt())
                     .postDate(jsonNode.get("date").asText())
                     .slug(jsonNode.get("slug").asText())
                     .status(jsonNode.get("status").asText())

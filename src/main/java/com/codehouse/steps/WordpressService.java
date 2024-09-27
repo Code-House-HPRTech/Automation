@@ -56,6 +56,7 @@ public class WordpressService {
             // Create Batch CSV file
             CsvConverterService.convertBatchToCsv(
                     String.format(Constant.POSTS_JSON_FILE_PATH, folderName),
+                    String.format(Constant.MEDIA_JSON_FILE_PATH, folderName),
                     String.format(Constant.CSV_FOLDER_PATH, folderName)
             );
 

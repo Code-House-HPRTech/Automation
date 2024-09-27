@@ -83,4 +83,27 @@ public class WordPressUtils {
         System.out.println(mediaIdMap.size());
         return mediaIdMap;
     }
+
+    /**
+     * @param mediaJsonFilePath
+     * @return
+     * @throws IOException
+     */
+    public static Map<Integer, String> getRemoteMediaMap(String mediaJsonFilePath) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // Load and parse JSON files
+        List<JsonNode> remoteMediaList = objectMapper.readValue(
+                new File(mediaJsonFilePath),
+                objectMapper.getTypeFactory().constructCollectionType(List.class, JsonNode.class)
+        );
+
+        // Create a HashMap to store myMediaName -> myMediaId mapping
+        Map<Integer, String> mediaMap = new HashMap<>();
+
+        for (JsonNode element : remoteMediaList) {
+            mediaMap.put(element.get("id").asInt(), element.get("guid").get("rendered").asText());
+        }
+        return mediaMap;
+    }
 }

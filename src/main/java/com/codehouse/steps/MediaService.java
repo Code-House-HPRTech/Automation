@@ -82,7 +82,6 @@ public class MediaService {
                 Utils.downloadSpecificMediaData("media", Constant.MEDIA_JSON_FILE_PATH,
                         "&_fields=id,guid&include=" + idGrp);
             }
-
         }
     }
 }
