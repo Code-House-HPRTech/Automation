@@ -5,7 +5,6 @@
 
 package com.codehouse.service;
 
-import com.codehouse.contants.Constant;
 import com.codehouse.util.Utils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MediaService {
-    public static void downloadMedia(String mediaJsonFilePath) throws IOException {
+    public static void downloadMedia(String mediaJsonFilePath, String mediaFolderPath) throws IOException {
         Utils.disableSSLValidation();
 
         // Read JSON array from file and convert it to a List of objects
@@ -32,7 +31,7 @@ public class MediaService {
         for (JsonNode obj : mediaList) {
             try {
                 String imageUrl = obj.get("guid").get("rendered").asText();
-                Utils.downloadImage(imageUrl);
+                Utils.downloadImage(imageUrl, mediaFolderPath);
 
                 System.out.println(++i + ": Image downloaded successfully: " + imageUrl);
             } catch (IOException e) {

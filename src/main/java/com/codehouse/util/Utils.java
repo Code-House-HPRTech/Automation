@@ -151,11 +151,11 @@ public class Utils {
      * @param imageUrl
      * @throws IOException
      */
-    public static void downloadImage(String imageUrl) throws IOException {
+    public static void downloadImage(String imageUrl, String mediaFolderPath) throws IOException {
         URL url = new URL(imageUrl);
 
         // Create the folder if it doesn't exist
-        Path folder = Path.of(Constant.MEDIA_FOLDER_PATH);
+        Path folder = Path.of(mediaFolderPath);
         if (!Files.exists(folder)) {
             Files.createDirectories(folder);
         }

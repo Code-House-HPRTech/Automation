@@ -18,10 +18,10 @@ public class Main {
     public static final Map<String, String> SITE_DIR_MAP = new HashMap<>();
 
     static {
-        //SITE_DIR_MAP.put("https://wrestlingnews.co", "wrestlingnews");
+        SITE_DIR_MAP.put("https://wrestlingnews.co", "wrestlingnews");
 //        SITE_DIR_MAP.put("https://www.wrestlezone.com", "wrestlezone");
 //        SITE_DIR_MAP.put("https://wrestlingheadlines.com", "wrestlingheadlines");
-        SITE_DIR_MAP.put("https://www.ringsidenews.com", "ringsidenews");
+//        SITE_DIR_MAP.put("https://www.ringsidenews.com", "ringsidenews");
 //        SITE_DIR_MAP.put("https://www.pwmania.com", "pwmania");
 //        SITE_DIR_MAP.put("https://www.ewrestlingnews.com", "ewrestlingnews");
     }
@@ -29,9 +29,12 @@ public class Main {
     public static void main(String[] args) {
         /*
             Operation Type:
-                1. DOWNLOAD_DATA_AND_MEDIA
-                2. DOWNLOAD_MY_MEDIA_DATA
-                3. UPDATE_POST_WITH_CTM_AND_PREPARE_CSV
+                _0_DOWNLOAD_ONLY_JSON
+                _1_DOWNLOAD_ALL_JSON_WITH_MEDIA
+                _2_DOWNLOAD_REQUIRED_MEDIA_JSON_BY_POST
+                _3_DOWNLOAD_MY_MEDIA_DATA
+                _4_UPDATE_POST_WITH_CTM_AND_PREPARE_CSV
+                _2_1_DOWNLOAD_MEDIA_IMAGES
          */
         String operationType = Constant.OperationType._4_UPDATE_POST_WITH_CTM_AND_PREPARE_CSV;
 

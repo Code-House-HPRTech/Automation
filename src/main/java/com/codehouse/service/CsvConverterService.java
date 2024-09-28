@@ -21,12 +21,9 @@ import java.util.stream.StreamSupport;
 
 public class CsvConverterService {
 
-    public static Map<String, String> convertBatchToCsv(String postJsonFilePath, String mediaJsonFilePath, String csvFolderPath) throws IOException {
+    public static void convertBatchToCsv(String postJsonFilePath, String csvFolderPath) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         List<WordpressPost> postDTOList = new ArrayList<>();
-
-        // Get Media Map
-        Map<Integer, String> mediaMap = WordPressUtils.getRemoteMediaMap(mediaJsonFilePath);
 
         List<JsonNode> myObjects = objectMapper.readValue(
                 new File(postJsonFilePath),
@@ -35,17 +32,6 @@ public class CsvConverterService {
         Map<String, String> urlMaskMap = new HashMap<>();
 
         for (JsonNode jsonNode : myObjects) {
-//            String featureMediaImgTag = Optional.ofNullable(mediaMap.get(jsonNode.get("featured_media").asInt()))
-//                    .filter(url -> !url.isEmpty())
-//                    .map(url -> {
-//                        String[] urlSplit = url.split("wp-content");
-//                        String urlKey = urlSplit[0];
-//                        if (!urlMaskMap.containsKey(urlKey)) {
-//                            urlMaskMap.put(urlKey, UUID.randomUUID().toString());
-//                        }
-//                        return String.format("<img src=\"%s\" style=\"display: none;\">\n", urlMaskMap.get(urlKey) + "wp-content"+ urlSplit[1]);
-//                    })
-//                    .orElse("");
             if (jsonNode.get("featured_media").asInt() != 0) {
                 postDTOList.add(WordpressPost.builder()
                         .id(jsonNode.get("id").asInt())
@@ -95,7 +81,6 @@ public class CsvConverterService {
             }
         }
         System.out.println("------->> Conversion successful");
-        return urlMaskMap;
     }
 
     private static String[] getHeader(JsonNode rootNode) {

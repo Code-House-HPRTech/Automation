@@ -5,14 +5,13 @@
 
 package com.codehouse.util;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WordPressUtils {
     /**
@@ -106,4 +105,44 @@ public class WordPressUtils {
         }
         return mediaMap;
     }
+
+    /**
+     * Create a new json file which contains only new media that we need to download
+     *
+     * @param mediaJsonFilePath
+     * @param myMediaJsonFile
+     * @param requiredMediaJsonFile
+     */
+    public static void collectOnlyRequiredMedia(String mediaJsonFilePath, String myMediaJsonFile, String requiredMediaJsonFile) {
+        Utils.deleteFile(requiredMediaJsonFile);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            // Read existing.json and store names in a Set for fast lookup
+            List<Map<String, JsonNode>> existingItems
+                    = objectMapper.readValue(new File(myMediaJsonFile), new TypeReference<List<Map<String, JsonNode>>>() {
+            });
+            Set<String> existingNames = new HashSet<>();
+            for (Map<String, JsonNode> item : existingItems) {
+                existingNames.add(item.get("guid").get("rendered").asText().split("uploads", 2)[1].split("/", 4)[3]);
+            }
+
+            // Read new.json and filter items that are not in existingNames
+            List<Map<String, JsonNode>> newItems = objectMapper.readValue(new File(mediaJsonFilePath), new TypeReference<List<Map<String, JsonNode>>>() {
+            });
+            List<Map<String, JsonNode>> requiredNewItems = newItems.stream()
+                    .filter(item -> !existingNames.contains(item.get("guid").get("rendered").asText().split("uploads", 2)[1].split("/", 4)[3]))
+                    .toList();
+
+            // Write the filtered items to requirednew.json
+            objectMapper.writeValue(new File(requiredMediaJsonFile), requiredNewItems);
+
+            System.out.println("Filtered items written to requirednew.json");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
