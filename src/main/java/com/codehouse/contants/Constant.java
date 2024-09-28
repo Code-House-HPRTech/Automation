@@ -3,7 +3,7 @@ package com.codehouse.contants;
 public class Constant {
     public static final String WORDPRESS_URL_POSTFIX = "/wp-json/wp/v2/";
 
-    public static final String WP_DATA_BASE_PATH = "C:\\Users\\prakash_jangir\\Documents\\Prakash-Jangir\\wp-data\\test\\%s\\";
+    public static final String WP_DATA_BASE_PATH = "C:\\Users\\Administrator\\Desktop\\wordpress\\WORLD_SPORTS_7\\%s\\";
     public static final String MEDIA_FOLDER_PATH = WP_DATA_BASE_PATH + "media";
     public static final String CSV_FOLDER_PATH = WP_DATA_BASE_PATH + "csv";
 
@@ -20,5 +20,6 @@ public class Constant {
         public static String _2_DOWNLOAD_REQUIRED_MEDIA_BY_POST = "2_DOWNLOAD_REQUIRED_MEDIA_BY_POST";
         public static String _3_DOWNLOAD_MY_MEDIA_DATA = "3_DOWNLOAD_MY_MEDIA_DATA";
         public static String _4_UPDATE_POST_WITH_CTM_AND_PREPARE_CSV = "4_UPDATE_POST_WITH_CTM_AND_PREPARE_CSV";
+        public static String _2_1_DOWNLOAD_MEDIA = "_2_1_DOWNLOAD_MEDIA";
     }
 }

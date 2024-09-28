@@ -1,7 +1,7 @@
 package com.codehouse;
 
 import com.codehouse.contants.Constant;
-import com.codehouse.steps.WordpressService;
+import com.codehouse.service.WordpressService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,26 +10,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
-    public static final String MY_SITE_URL = "";
+    public static final String MY_SITE_URL = "https://worldsports7.com";
+    public static final String DATA_RANGE
+            = "&after=2024-09-25T00:00:00" +
+            "&before=2024-09-27T23:59:59";
 
     public static final Map<String, String> SITE_DIR_MAP = new HashMap<>();
 
     static {
-        SITE_DIR_MAP.put("wrestling.co", "wrestling");
-        SITE_DIR_MAP.put("", "");
-        SITE_DIR_MAP.put("", "");
-        SITE_DIR_MAP.put("", "");
-        SITE_DIR_MAP.put("", "");
+        //SITE_DIR_MAP.put("https://wrestlingnews.co", "wrestlingnews");
+//        SITE_DIR_MAP.put("https://www.wrestlezone.com", "wrestlezone");
+//        SITE_DIR_MAP.put("https://wrestlingheadlines.com", "wrestlingheadlines");
+        SITE_DIR_MAP.put("https://www.ringsidenews.com", "ringsidenews");
+//        SITE_DIR_MAP.put("https://www.pwmania.com", "pwmania");
+//        SITE_DIR_MAP.put("https://www.ewrestlingnews.com", "ewrestlingnews");
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         /*
             Operation Type:
                 1. DOWNLOAD_DATA_AND_MEDIA
                 2. DOWNLOAD_MY_MEDIA_DATA
                 3. UPDATE_POST_WITH_CTM_AND_PREPARE_CSV
          */
-        String operationType = Constant.OperationType._1_DOWNLOAD_DATA_AND_MEDIA;
+        String operationType = Constant.OperationType._4_UPDATE_POST_WITH_CTM_AND_PREPARE_CSV;
 
         SITE_DIR_MAP.forEach((siteUrl, folderName) -> {
             try {
@@ -38,7 +42,12 @@ public class Main {
                 Files.createDirectories(folder);
 
                 // Call actual Service
-                WordpressService.downloadAndPrepareData(siteUrl, MY_SITE_URL, folderName, operationType);
+                WordpressService.downloadAndPrepareData(
+                        siteUrl,
+                        MY_SITE_URL,
+                        folderName,
+                        operationType,
+                        DATA_RANGE);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

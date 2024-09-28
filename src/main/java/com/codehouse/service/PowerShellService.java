@@ -1,4 +1,4 @@
-package com.codehouse.steps;
+package com.codehouse.service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,7 +8,11 @@ public class PowerShellService {
 
     public static void replaceStringWithMyStringInCsv(String csvFolderPath, String searchString, String replaceString) {
         // Define the PowerShell command to execute
-        String command = "Get-ChildItem";
+        String command
+                = String.format("""
+                Get-ChildItem *.csv | ForEach-Object {
+                    (Get-Content $_.FullName) -replace '%s', '%s' | Set-Content $_.FullName
+                }""", searchString, replaceString);
 
         try {
             // Create a ProcessBuilder instance and set the working directory and command

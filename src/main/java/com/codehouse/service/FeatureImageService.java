@@ -3,7 +3,7 @@
  * @Date - 18/09/2024
  */
 
-package com.codehouse.steps;
+package com.codehouse.service;
 
 import com.codehouse.contants.Constant;
 import com.codehouse.util.WordPressUtils;
@@ -16,14 +16,14 @@ import java.io.IOException;
 import java.util.Map;
 
 public class FeatureImageService {
-    public static void updateFeatureImageId(String mediaJsonFilePath, String myMediaJsonFilePath) throws IOException {
+    public static void updateFeatureImageId(String mediaJsonFilePath, String myMediaJsonFilePath, String postJsonFilePath) throws IOException {
         Map<Integer, Integer> mediaMap = WordPressUtils.mapMediaId(
                 mediaJsonFilePath,
                 myMediaJsonFilePath
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonArray = objectMapper.readTree(new File(Constant.POSTS_JSON_FILE_PATH));
+        JsonNode jsonArray = objectMapper.readTree(new File(postJsonFilePath));
 
         System.out.println("----> Media Updation Started.....");
 
@@ -33,13 +33,13 @@ public class FeatureImageService {
                 if (mediaNode != null && mediaNode.isInt()) {
                     int oldValue = mediaNode.asInt();
                     if (mediaMap.containsKey(oldValue)) {
-                        JsonNode newValue = objectMapper.valueToTree(mediaMap.get(oldValue));
+                        JsonNode newValue = objectMapper.valueToTree(mediaMap.getOrDefault(oldValue, 0));
                         ((ObjectNode) jsonNode).replace("featured_media", newValue);
                     }
                 }
             }
 
-            objectMapper.writeValue(new File(Constant.POSTS_JSON_FILE_PATH), jsonArray);
+            objectMapper.writeValue(new File(postJsonFilePath), jsonArray);
 
             System.out.println("------> Media updated successfully in the file.");
         }

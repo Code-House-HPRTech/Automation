@@ -3,7 +3,7 @@
  * @Date - 18/09/2024
  */
 
-package com.codehouse.steps;
+package com.codehouse.service;
 
 import com.codehouse.util.WordPressUtils;
 import com.fasterxml.jackson.databind.JsonNode;

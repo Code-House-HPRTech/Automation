@@ -3,7 +3,7 @@
  * @Date - 18/09/2024
  */
 
-package com.codehouse.steps;
+package com.codehouse.service;
 
 import com.codehouse.dto.WordpressPost;
 import com.codehouse.util.WordPressUtils;
@@ -21,7 +21,7 @@ import java.util.stream.StreamSupport;
 
 public class CsvConverterService {
 
-    public static void convertBatchToCsv(String postJsonFilePath, String mediaJsonFilePath, String csvFolderPath) throws IOException {
+    public static Map<String, String> convertBatchToCsv(String postJsonFilePath, String mediaJsonFilePath, String csvFolderPath) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         List<WordpressPost> postDTOList = new ArrayList<>();
 
@@ -32,27 +32,38 @@ public class CsvConverterService {
                 new File(postJsonFilePath),
                 objectMapper.getTypeFactory().constructCollectionType(List.class, JsonNode.class));
 
-        for (JsonNode jsonNode : myObjects) {
-            String featureMediaImgTag = Optional.ofNullable(mediaMap.get(jsonNode.get("featured_media").asInt()))
-                    .filter(url -> !url.isEmpty())
-                    .map(url -> String.format("<img src=\"%s\">\n", url))
-                    .orElse("");
+        Map<String, String> urlMaskMap = new HashMap<>();
 
-            postDTOList.add(WordpressPost.builder()
-                    .id(jsonNode.get("id").asInt())
-                    .title(jsonNode.get("title").get("rendered").asText())
-                    .content(featureMediaImgTag + jsonNode.get("content").get("rendered").asText())
-                    .excerpt(jsonNode.get("excerpt").get("rendered").asText())
-                    .postDate(jsonNode.get("date").asText())
-                    .slug(jsonNode.get("slug").asText())
-                    .status(jsonNode.get("status").asText())
-                    .category(jsonNode.get("categories").toString().replace("[", "").replace("]", "").replace("\"", ""))
-                    .tag(jsonNode.get("tags").toString().replace("[", "").replace("]", "").replace("\"", ""))
-                    .build());
+        for (JsonNode jsonNode : myObjects) {
+//            String featureMediaImgTag = Optional.ofNullable(mediaMap.get(jsonNode.get("featured_media").asInt()))
+//                    .filter(url -> !url.isEmpty())
+//                    .map(url -> {
+//                        String[] urlSplit = url.split("wp-content");
+//                        String urlKey = urlSplit[0];
+//                        if (!urlMaskMap.containsKey(urlKey)) {
+//                            urlMaskMap.put(urlKey, UUID.randomUUID().toString());
+//                        }
+//                        return String.format("<img src=\"%s\" style=\"display: none;\">\n", urlMaskMap.get(urlKey) + "wp-content"+ urlSplit[1]);
+//                    })
+//                    .orElse("");
+            if (jsonNode.get("featured_media").asInt() != 0) {
+                postDTOList.add(WordpressPost.builder()
+                        .id(jsonNode.get("id").asInt())
+                        .title(jsonNode.get("title").get("rendered").asText())
+                        .content(jsonNode.get("content").get("rendered").asText())
+                        .excerpt(jsonNode.get("excerpt").get("rendered").asText())
+                        .postDate(jsonNode.get("date").asText())
+                        .featureImage(jsonNode.get("featured_media").asInt())
+                        .slug(jsonNode.get("slug").asText())
+                        .status(jsonNode.get("status").asText())
+                        .category(jsonNode.get("categories").toString().replace("[", "").replace("]", "").replace("\"", ""))
+                        .tag(jsonNode.get("tags").toString().replace("[", "").replace("]", "").replace("\"", ""))
+                        .build());
+            }
         }
 
         // Define the size of each chunk
-        int chunkSize = 100;
+        int chunkSize = 300;
 
         // Calculate the number of CSV files needed
         int numFiles = (int) Math.ceil((double) postDTOList.size() / chunkSize);
@@ -84,6 +95,7 @@ public class CsvConverterService {
             }
         }
         System.out.println("------->> Conversion successful");
+        return urlMaskMap;
     }
 
     private static String[] getHeader(JsonNode rootNode) {

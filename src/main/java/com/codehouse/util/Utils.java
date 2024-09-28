@@ -196,12 +196,12 @@ public class Utils {
         }
     }
 
-    public static void downloadSpecificMediaData(String type, String path, String filterColumn) {
+    public static void downloadSpecificMediaData(String type, String path, String filterColumn, String siteUrl, boolean isFirstWrite) {
         System.out.println("-------Downloading Started: " + type.toUpperCase() + "---------");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
             String response = getResponseFromUrl(
-                    Constant.SITE_URL
+                    siteUrl
                             + Constant.WORDPRESS_URL_POSTFIX
                             + type
                             + "?per_page=100"
@@ -209,7 +209,13 @@ public class Utils {
             );
 
             if (response != null && (!(response.equalsIgnoreCase("rest_post_invalid_page_number") || response.equalsIgnoreCase("[]")))) {
-                response = response.replaceFirst("\\[", ",");
+                // If this is the first write, replace the first comma with a [
+                if (isFirstWrite) {
+                    response = response.replaceFirst("\\[", "[");
+                } else {
+                    response = response.replaceFirst("\\[", ",");
+                }
+
                 if (response.endsWith("]")) {
                     response = response.substring(0, response.length() - 1);
                 }
@@ -224,6 +230,7 @@ public class Utils {
 
     /**
      * Decode to Hindi
+     *
      * @param input
      * @return
      */

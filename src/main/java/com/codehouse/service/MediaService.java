@@ -3,7 +3,7 @@
  * @Date - 18/09/2024
  */
 
-package com.codehouse.steps;
+package com.codehouse.service;
 
 import com.codehouse.contants.Constant;
 import com.codehouse.util.Utils;
@@ -11,7 +11,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +42,11 @@ public class MediaService {
         System.out.println("------- All Media Downloaded Successfully ------");
     }
 
-    public static void downloadRequiredMediaByPost(String[] args) throws IOException {
+    public static void downloadRequiredMediaByPost(String postJsonFilePath, String mediaJsonFilePath, String siteUrl) throws IOException {
         Utils.disableSSLValidation();
 
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode postJsonArray = objectMapper.readTree(new File("C:\\Users\\prakash_jangir\\Desktop\\Prakash\\test.json"));
+        JsonNode postJsonArray = objectMapper.readTree(new File(postJsonFilePath));
 
         if (postJsonArray.isArray()) {
             ArrayNode postJsonarrayNode = (ArrayNode) postJsonArray;
@@ -78,9 +80,18 @@ public class MediaService {
                 featureIdStrings.add(idsBuilder.toString());
             }
 
+            boolean isFirstWrite = true;
             for (String idGrp : featureIdStrings) {
-                Utils.downloadSpecificMediaData("media", Constant.MEDIA_JSON_FILE_PATH,
-                        "&_fields=id,guid&include=" + idGrp);
+                Utils.downloadSpecificMediaData("media", mediaJsonFilePath,
+                        "&_fields=id,guid&include=" + idGrp, siteUrl, isFirstWrite);
+                isFirstWrite = false;
+            }
+            // Correct Json File Formatting
+            // After the loop, add the closing bracket if necessary
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(mediaJsonFilePath, true))) {
+                writer.write("]");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
