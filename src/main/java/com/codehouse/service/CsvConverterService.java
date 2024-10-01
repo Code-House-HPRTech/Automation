@@ -21,7 +21,7 @@ import java.util.stream.StreamSupport;
 
 public class CsvConverterService {
 
-    public static void convertBatchToCsv(String postJsonFilePath, String csvFolderPath) throws IOException {
+    public static void convertBatchToCsv(String postJsonFilePath, String csvFolderPath, String defaultCategory) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         List<WordpressPost> postDTOList = new ArrayList<>();
 
@@ -32,20 +32,20 @@ public class CsvConverterService {
         Map<String, String> urlMaskMap = new HashMap<>();
 
         for (JsonNode jsonNode : myObjects) {
-            if (jsonNode.get("featured_media").asInt() != 0) {
-                postDTOList.add(WordpressPost.builder()
-                        .id(jsonNode.get("id").asInt())
-                        .title(jsonNode.get("title").get("rendered").asText())
-                        .content(jsonNode.get("content").get("rendered").asText())
-                        .excerpt(jsonNode.get("excerpt").get("rendered").asText())
-                        .postDate(jsonNode.get("date").asText())
-                        .featureImage(jsonNode.get("featured_media").asInt())
-                        .slug(jsonNode.get("slug").asText())
-                        .status(jsonNode.get("status").asText())
-                        .category(jsonNode.get("categories").toString().replace("[", "").replace("]", "").replace("\"", ""))
-                        .tag(jsonNode.get("tags").toString().replace("[", "").replace("]", "").replace("\"", ""))
-                        .build());
-            }
+            //if (jsonNode.get("featured_media").asInt() != 0) {
+            postDTOList.add(WordpressPost.builder()
+                    .id(jsonNode.get("id").asInt())
+                    .title(jsonNode.get("title").get("rendered").asText())
+                    .content(jsonNode.get("content").get("rendered").asText())
+                    .excerpt(jsonNode.get("excerpt").get("rendered").asText())
+                    .postDate(jsonNode.get("date").asText())
+                    .featureImage(jsonNode.get("featured_media").asInt())
+                    .slug(jsonNode.get("slug").asText())
+                    .status(jsonNode.get("status").asText())
+                    .category(defaultCategory + "," + jsonNode.get("categories").toString().replace("[", "").replace("]", "").replace("\"", ""))
+                    .tag(defaultCategory + "," + jsonNode.get("tags").toString().replace("[", "").replace("]", "").replace("\"", ""))
+                    .build());
+            //}
         }
 
         // Define the size of each chunk

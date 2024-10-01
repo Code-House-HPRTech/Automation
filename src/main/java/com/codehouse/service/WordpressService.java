@@ -10,7 +10,7 @@ import java.util.Objects;
 
 
 public class WordpressService {
-    public static void downloadAndPrepareData(String siteUrl, String mySiteUrl, String folderName, String operationType, String dataRange) throws IOException {
+    public static void downloadAndPrepareData(String siteUrl, String mySiteUrl, String folderName, String defaultCategory, String operationType, String dataRange) throws IOException {
         Utils.disableSSLValidation();
 
         if (Constant.OperationType._0_DOWNLOAD_ONLY_JSON.equals(operationType) || Constant.OperationType._1_DOWNLOAD_ALL_JSON_WITH_MEDIA.equals(operationType)) {
@@ -82,12 +82,16 @@ public class WordpressService {
             // Create Batch CSV file
             CsvConverterService.convertBatchToCsv(
                     String.format(Constant.POSTS_JSON_FILE_PATH, folderName),
-                    String.format(Constant.CSV_FOLDER_PATH, folderName)
+                    String.format(Constant.CSV_FOLDER_PATH, folderName),
+                    defaultCategory
             );
 
             // Replace site url to my site url
             PowerShellService.replaceStringWithMyStringInCsv(String.format(Constant.CSV_FOLDER_PATH, folderName),
                     siteUrl, mySiteUrl);
+
+            PowerShellService.replaceStringWithMyStringInCsv(String.format(Constant.CSV_FOLDER_PATH, folderName),
+                    "wp-content/uploads/\\d{4}/\\d{2}/", "wp-content/uploads/2024/09/");
 
             // Replace feature image url to orignal url
 //            urlMaskMap.forEach((originalUrl, maskString) -> {

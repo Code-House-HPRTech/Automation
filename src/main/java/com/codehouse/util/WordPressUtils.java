@@ -76,6 +76,8 @@ public class WordPressUtils {
             Integer myMediaId = myMediaMap.get(remoteMediaName.toLowerCase()); // Case-insensitive lookup
             if (myMediaId != null) {
                 mediaIdMap.put(remoteMediaId, myMediaId);
+            }else{
+                mediaIdMap.put(remoteMediaId, 0);
             }
         }
 
