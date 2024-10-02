@@ -1,13 +1,12 @@
 package com.codehouse;
 
 import com.codehouse.contants.Constant;
+import com.codehouse.contants.SiteInfo;
 import com.codehouse.service.WordpressService;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Main {
     public static final String MY_SITE_URL = "https://worldsports7.com";
@@ -26,9 +25,11 @@ public class Main {
                 _4_UPDATE_POST_WITH_CTM_AND_PREPARE_CSV
 
          */
-        String operationType = Constant.OperationType._4_UPDATE_POST_WITH_CTM_AND_PREPARE_CSV;
+        String operationType = Constant.OperationType
+                ._2_DOWNLOAD_REQUIRED_MEDIA_JSON_BY_POST;
 
         SiteInfo.SITE_LIST.forEach(siteInfo -> {
+            System.out.println("----> Processing Url: " + siteInfo.getSiteUrl());
             try {
                 // Create Directory if not exist
                 Path folder = Path.of(String.format(Constant.WP_DATA_BASE_PATH, siteInfo.getFolderName()));
@@ -43,7 +44,7 @@ public class Main {
                         operationType,
                         DATA_RANGE);
             } catch (IOException e) {
-                System.out.println("Exception Occured: " + e.getMessage());
+                System.out.println("Exception Occurred: " + e.getMessage());
             }
         });
     }

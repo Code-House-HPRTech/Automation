@@ -18,12 +18,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MediaService {
-    public static void downloadMedia(String mediaJsonFilePath, String mediaFolderPath) throws IOException {
+    public static void downloadMedia(String mediaJsonFilePath, String mediaFolderPath) {
         Utils.disableSSLValidation();
 
         // Read JSON array from file and convert it to a List of objects
         ObjectMapper objectMapper = new ObjectMapper();
-        List<JsonNode> mediaList = objectMapper.readValue(new File(mediaJsonFilePath), objectMapper.getTypeFactory().constructCollectionType(List.class, JsonNode.class));
+        List<JsonNode> mediaList = null;
+        try {
+            mediaList = objectMapper.readValue(new File(mediaJsonFilePath), objectMapper.getTypeFactory().constructCollectionType(List.class, JsonNode.class));
+        } catch (Exception e) {
+            System.err.println("Error occurred while reading media json file");
+            return;
+        }
 
         System.out.println("------- Media Downloading Started ------");
 
@@ -41,11 +47,17 @@ public class MediaService {
         System.out.println("------- All Media Downloaded Successfully ------");
     }
 
-    public static void downloadRequiredMediaByPost(String postJsonFilePath, String mediaJsonFilePath, String siteUrl) throws IOException {
+    public static void downloadRequiredMediaByPost(String postJsonFilePath, String mediaJsonFilePath, String siteUrl) {
         Utils.disableSSLValidation();
 
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode postJsonArray = objectMapper.readTree(new File(postJsonFilePath));
+        JsonNode postJsonArray = null;
+        try {
+            postJsonArray = objectMapper.readTree(new File(postJsonFilePath));
+        } catch (IOException e) {
+            System.err.println("Error occurred while reading post json file");
+            return;
+        }
 
         if (postJsonArray.isArray()) {
             ArrayNode postJsonarrayNode = (ArrayNode) postJsonArray;

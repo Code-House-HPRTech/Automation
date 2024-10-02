@@ -10,7 +10,7 @@ import java.util.Objects;
 
 
 public class WordpressService {
-    public static void downloadAndPrepareData(String siteUrl, String mySiteUrl, String folderName, String defaultCategory, String operationType, String dataRange) throws IOException {
+    public static void downloadAndPrepareData(String siteUrl, String mySiteUrl, String folderName, String defaultCategory, String operationType, String dataRange) {
         Utils.disableSSLValidation();
 
         if (Constant.OperationType._0_DOWNLOAD_ONLY_JSON.equals(operationType) || Constant.OperationType._1_DOWNLOAD_ALL_JSON_WITH_MEDIA.equals(operationType)) {
@@ -36,12 +36,13 @@ public class WordpressService {
             );
 
             // Download My Media for Downloading only required media
-            Utils.downloadData("media",
-                    String.format(Constant.MY_MEDIA_JSON_FILE_PATH, folderName),
-                    "&_fields=id,guid", mySiteUrl);
+            Utils.copyFile(
+                    Constant.COMMON_MEDIA_JSON_FILE_PATH,
+                    String.format(Constant.MY_MEDIA_JSON_FILE_PATH, folderName)
+            );
 
             // Prepare required media json
-            WordPressUtils.collectOnlyRequiredMedia(
+            WordPressUtils.collectOnlyRequiredMediaJson(
                     String.format(Constant.MEDIA_JSON_FILE_PATH, folderName),
                     String.format(Constant.MY_MEDIA_JSON_FILE_PATH, folderName),
                     String.format(Constant.REQUIRED_MEDIA_JSON_FILE_PATH, folderName)

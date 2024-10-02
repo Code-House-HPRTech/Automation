@@ -21,13 +21,20 @@ import java.util.stream.StreamSupport;
 
 public class CsvConverterService {
 
-    public static void convertBatchToCsv(String postJsonFilePath, String csvFolderPath, String defaultCategory) throws IOException {
+    public static void convertBatchToCsv(String postJsonFilePath, String csvFolderPath, String defaultCategory) {
         ObjectMapper objectMapper = new ObjectMapper();
         List<WordpressPost> postDTOList = new ArrayList<>();
 
-        List<JsonNode> myObjects = objectMapper.readValue(
-                new File(postJsonFilePath),
-                objectMapper.getTypeFactory().constructCollectionType(List.class, JsonNode.class));
+        List<JsonNode> myObjects = null;
+        try {
+            myObjects = objectMapper.readValue(
+                    new File(postJsonFilePath),
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, JsonNode.class));
+        } catch (IOException e) {
+            System.err.println("Error occurred while reading post json file");
+            e.printStackTrace();
+            return;
+        }
 
         Map<String, String> urlMaskMap = new HashMap<>();
 
@@ -56,7 +63,11 @@ public class CsvConverterService {
 
         Path folder = Path.of(csvFolderPath);
         if (!Files.exists(folder)) {
-            Files.createDirectories(folder);
+            try {
+                Files.createDirectories(folder);
+            } catch (IOException e) {
+                System.err.println("Error occurred while creating folder: " + folder);
+            }
         }
 
         // Iterate through the chunks and write each chunk to a separate CSV file

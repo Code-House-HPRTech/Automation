@@ -18,14 +18,21 @@ public class WordPressUtils {
      * Create a map with key as category id and value as category name
      *
      * @return
-     * @throws IOException
+     * @
      */
-    public static Map<Integer, String> createCategoryTagMapWithIdName(String filePath) throws IOException {
+    public static Map<Integer, String> createCategoryTagMapWithIdName(String filePath) {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<Integer, String> map = new HashMap<>();
 
-        List<JsonNode> myCategoryList = objectMapper.readValue(new File(filePath),
-                objectMapper.getTypeFactory().constructCollectionType(List.class, JsonNode.class));
+        List<JsonNode> myCategoryList = null;
+        try {
+            myCategoryList = objectMapper.readValue(new File(filePath),
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, JsonNode.class));
+        } catch (IOException e) {
+            System.err.println("Error occurred while reading my category list");
+            e.printStackTrace();
+            return new HashMap<Integer, String>();
+        }
 
         for (JsonNode element1 : myCategoryList) {
             String name = element1.get("name").asText();
@@ -40,22 +47,36 @@ public class WordPressUtils {
      * So that I can replace remote media id with my media id
      *
      * @return
-     * @throws IOException
+     * @
      */
-    public static Map<Integer, Integer> mapMediaId(String mediaJsonFilePath, String myMediaJsonFilePath) throws IOException {
+    public static Map<Integer, Integer> mapMediaId(String mediaJsonFilePath, String myMediaJsonFilePath) {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<Integer, Integer> mediaIdMap = new HashMap<>();
 
         // Load and parse JSON files
-        List<JsonNode> remoteMediaList = objectMapper.readValue(
-                new File(mediaJsonFilePath),
-                objectMapper.getTypeFactory().constructCollectionType(List.class, JsonNode.class)
-        );
+        List<JsonNode> remoteMediaList = null;
+        try {
+            remoteMediaList = objectMapper.readValue(
+                    new File(mediaJsonFilePath),
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, JsonNode.class)
+            );
+        } catch (IOException e) {
+            System.err.println("Error occurred while reading remote media list");
+            e.printStackTrace();
+            return new HashMap<>();
+        }
 
-        List<JsonNode> myMediaList = objectMapper.readValue(
-                new File(myMediaJsonFilePath),
-                objectMapper.getTypeFactory().constructCollectionType(List.class, JsonNode.class)
-        );
+        List<JsonNode> myMediaList = null;
+        try {
+            myMediaList = objectMapper.readValue(
+                    new File(myMediaJsonFilePath),
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, JsonNode.class)
+            );
+        } catch (IOException e) {
+            System.err.println("Error occurred while reading my media list");
+            e.printStackTrace();
+            return new HashMap<>();
+        }
 
         // Create a HashMap to store myMediaName -> myMediaId mapping
         Map<String, Integer> myMediaMap = new HashMap<>();
@@ -76,7 +97,7 @@ public class WordPressUtils {
             Integer myMediaId = myMediaMap.get(remoteMediaName.toLowerCase()); // Case-insensitive lookup
             if (myMediaId != null) {
                 mediaIdMap.put(remoteMediaId, myMediaId);
-            }else{
+            } else {
                 mediaIdMap.put(remoteMediaId, 0);
             }
         }
@@ -88,16 +109,23 @@ public class WordPressUtils {
     /**
      * @param mediaJsonFilePath
      * @return
-     * @throws IOException
+     * @
      */
-    public static Map<Integer, String> getRemoteMediaMap(String mediaJsonFilePath) throws IOException {
+    public static Map<Integer, String> getRemoteMediaMap(String mediaJsonFilePath) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         // Load and parse JSON files
-        List<JsonNode> remoteMediaList = objectMapper.readValue(
-                new File(mediaJsonFilePath),
-                objectMapper.getTypeFactory().constructCollectionType(List.class, JsonNode.class)
-        );
+        List<JsonNode> remoteMediaList = null;
+        try {
+            remoteMediaList = objectMapper.readValue(
+                    new File(mediaJsonFilePath),
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, JsonNode.class)
+            );
+        } catch (IOException e) {
+            System.err.println("Error occurred while reading remote media list");
+            e.printStackTrace();
+            return new HashMap<>();
+        }
 
         // Create a HashMap to store myMediaName -> myMediaId mapping
         Map<Integer, String> mediaMap = new HashMap<>();
@@ -115,7 +143,7 @@ public class WordPressUtils {
      * @param myMediaJsonFile
      * @param requiredMediaJsonFile
      */
-    public static void collectOnlyRequiredMedia(String mediaJsonFilePath, String myMediaJsonFile, String requiredMediaJsonFile) {
+    public static void collectOnlyRequiredMediaJson(String mediaJsonFilePath, String myMediaJsonFile, String requiredMediaJsonFile) {
         Utils.deleteFile(requiredMediaJsonFile);
 
         ObjectMapper objectMapper = new ObjectMapper();

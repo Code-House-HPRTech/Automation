@@ -15,11 +15,18 @@ import java.util.*;
 
 public class CategoryAndTagService {
 
-    public static void updateCategoryAndTag(String type, String categoryJsonFilePath, String postJsonFilePath) throws IOException {
+    public static void updateCategoryAndTag(String type, String categoryJsonFilePath, String postJsonFilePath) {
         Map<Integer, String> categoryMap = WordPressUtils.createCategoryTagMapWithIdName(categoryJsonFilePath);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode postJsonArray = objectMapper.readTree(new File(postJsonFilePath));
+        JsonNode postJsonArray = null;
+        try {
+            postJsonArray = objectMapper.readTree(new File(postJsonFilePath));
+        } catch (IOException e) {
+            System.out.println("Error occurred while reading json file");
+            e.printStackTrace();
+            return;
+        }
 
         if (postJsonArray.isArray()) {
             ArrayNode postJsonarrayNode = (ArrayNode) postJsonArray;
@@ -39,7 +46,13 @@ public class CategoryAndTagService {
                 }
             }
 
-            objectMapper.writeValue(new File(postJsonFilePath), postJsonArray);
+            try {
+                objectMapper.writeValue(new File(postJsonFilePath), postJsonArray);
+            } catch (IOException e) {
+                System.err.println("Error occurred while writing post json file");
+                e.printStackTrace();
+                return;
+            }
 
             System.out.println("-----> Updated Successfully In The Post Json File.");
         }

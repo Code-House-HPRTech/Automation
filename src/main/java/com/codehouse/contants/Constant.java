@@ -3,7 +3,10 @@ package com.codehouse.contants;
 public class Constant {
     public static final String WORDPRESS_URL_POSTFIX = "/wp-json/wp/v2/";
 
-    public static final String WP_DATA_BASE_PATH = ".\\wordpress\\WORLD_SPORTS_7\\%s\\";
+    public static final String SITE_FOLDER_NAME = "WORLD_SPORTS_7";
+
+    public static final String WP_DATA_BASE = ".\\wordpress\\" + SITE_FOLDER_NAME + "\\";
+    public static final String WP_DATA_BASE_PATH = WP_DATA_BASE + "%s\\";
     public static final String MEDIA_FOLDER_PATH = WP_DATA_BASE_PATH + "media";
     public static final String CSV_FOLDER_PATH = WP_DATA_BASE_PATH + "csv";
 
@@ -14,6 +17,7 @@ public class Constant {
     public static final String TAGS_JSON_FILE_PATH = Constant.WP_DATA_BASE_PATH + "tags.json";
     public static final String MY_MEDIA_JSON_FILE_PATH = Constant.WP_DATA_BASE_PATH + "mymedia.json";
     public static final String REQUIRED_MEDIA_JSON_FILE_PATH = Constant.WP_DATA_BASE_PATH + "requiredmedia.json";
+    public static final String COMMON_MEDIA_JSON_FILE_PATH = Constant.WP_DATA_BASE + "mymedia.json";
 
     public static class OperationType {
         public static String _0_DOWNLOAD_ONLY_JSON = "0_DOWNLOAD_ONLY_JSON";

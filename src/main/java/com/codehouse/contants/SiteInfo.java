@@ -1,4 +1,4 @@
-package com.codehouse;
+package com.codehouse.contants;
 
 import lombok.*;
 
@@ -22,10 +22,10 @@ public class SiteInfo {
         // Wrestling sites
         SITE_LIST.add(new SiteInfo("https://wrestlingnews.co", "wrestlingnews", "WWE"));
         SITE_LIST.add(new SiteInfo("https://www.wrestlezone.com", "wrestlezone", "WWE"));
-        SITE_LIST.add(new SiteInfo("https://wrestlingheadlines.com", "wrestlingheadlines", "WWE"));
-        SITE_LIST.add(new SiteInfo("https://www.ringsidenews.com", "ringsidenews", "WWE"));
-        SITE_LIST.add(new SiteInfo("https://www.pwmania.com", "pwmania", "WWE"));
-        SITE_LIST.add(new SiteInfo("https://www.ewrestlingnews.com", "ewrestlingnews", "WWE"));
+//        SITE_LIST.add(new SiteInfo("https://wrestlingheadlines.com", "wrestlingheadlines", "WWE"));
+//        SITE_LIST.add(new SiteInfo("https://www.ringsidenews.com", "ringsidenews", "WWE"));
+//        SITE_LIST.add(new SiteInfo("https://www.pwmania.com", "pwmania", "WWE"));
+//        SITE_LIST.add(new SiteInfo("https://www.ewrestlingnews.com", "ewrestlingnews", "WWE"));
 
         // Cricket sites
 //        SITE_LIST.add(new SiteInfo("https://cricfit.com", "cricfit", "Cricket"));

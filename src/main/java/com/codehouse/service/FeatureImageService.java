@@ -16,14 +16,21 @@ import java.io.IOException;
 import java.util.Map;
 
 public class FeatureImageService {
-    public static void updateFeatureImageId(String mediaJsonFilePath, String myMediaJsonFilePath, String postJsonFilePath) throws IOException {
+    public static void updateFeatureImageId(String mediaJsonFilePath, String myMediaJsonFilePath, String postJsonFilePath)  {
         Map<Integer, Integer> mediaMap = WordPressUtils.mapMediaId(
                 mediaJsonFilePath,
                 myMediaJsonFilePath
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonArray = objectMapper.readTree(new File(postJsonFilePath));
+        JsonNode jsonArray = null;
+        try {
+            jsonArray = objectMapper.readTree(new File(postJsonFilePath));
+        } catch (IOException e) {
+            System.err.println("Error occurred while reading post json file");
+            e.printStackTrace();
+            return;
+        }
 
         System.out.println("----> Media Updation Started.....");
 
@@ -39,7 +46,13 @@ public class FeatureImageService {
                 }
             }
 
-            objectMapper.writeValue(new File(postJsonFilePath), jsonArray);
+            try {
+                objectMapper.writeValue(new File(postJsonFilePath), jsonArray);
+            } catch (IOException e) {
+                System.err.println("Error occurred while writing post json file");
+                e.printStackTrace();
+                return;
+            }
 
             System.out.println("------> Media updated successfully in the file.");
         }
