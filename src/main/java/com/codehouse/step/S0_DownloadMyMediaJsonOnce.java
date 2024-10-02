@@ -10,6 +10,7 @@ public class S0_DownloadMyMediaJsonOnce {
         // Download My Media for Downloading only required media
         Utils.downloadData("media",
                 Constant.COMMON_MEDIA_JSON_FILE_PATH,
-                "&_fields=id,guid", Main.MY_SITE_URL);
+                "&_fields=id,guid",
+                SiteDataConstant.MY_SITE_URL);
     }
 }

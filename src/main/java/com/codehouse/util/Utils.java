@@ -425,8 +425,8 @@ public class Utils {
                 Files.createDirectories(destination.getParent());
             }
 
-            // Copy the file
-            Files.copy(source, destination);
+            // Copy the file, replacing it if it already exists
+            Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
             System.out.println("File copied successfully from " + sourcePath + " to " + destinationPath);
         } catch (IOException e) {
             System.err.println("Error copying file: " + e.getMessage());

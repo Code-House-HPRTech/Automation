@@ -1,15 +1,14 @@
 package com.codehouse.step;
 
-import com.codehouse.contants.SiteInfo;
+import com.codehouse.dto.SiteInfo;
 import com.codehouse.contants.Constant;
 import com.codehouse.service.CategoryAndTagService;
 import com.codehouse.service.CsvConverterService;
-import com.codehouse.service.FeatureImageService;
 import com.codehouse.service.PowerShellService;
 
 public class S4_UpdatePostJsonAndCsv {
     public static void main(String[] args) {
-        performAction(SiteDataConstant.getSiteInfo());
+        SiteDataConstant.getSiteList().forEach(S4_UpdatePostJsonAndCsv::performAction);
     }
 
     public static void performAction(SiteInfo siteInfo) {
@@ -31,13 +30,13 @@ public class S4_UpdatePostJsonAndCsv {
                     String.format(Constant.POSTS_JSON_FILE_PATH, folderName));
         }
 
-        {
-            // Update feature image media id
-            FeatureImageService.updateFeatureImageId(
-                    String.format(Constant.MEDIA_JSON_FILE_PATH, folderName),
-                    String.format(Constant.MY_MEDIA_JSON_FILE_PATH, folderName),
-                    String.format(Constant.POSTS_JSON_FILE_PATH, folderName));
-        }
+//        {
+//            // Update feature image media id
+//            FeatureImageService.updateFeatureImageId(
+//                    String.format(Constant.MEDIA_JSON_FILE_PATH, folderName),
+//                    String.format(Constant.MY_MEDIA_JSON_FILE_PATH, folderName),
+//                    String.format(Constant.POSTS_JSON_FILE_PATH, folderName));
+//        }
 
         {
             // Create Batch CSV file

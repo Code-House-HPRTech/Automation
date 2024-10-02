@@ -106,4 +106,69 @@ public class MediaService {
             }
         }
     }
+
+    public static void downloadRequiredTagByPost(String postJsonFilePath, String tagJsonFilePath, String siteUrl) {
+        Utils.disableSSLValidation();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode postJsonArray = null;
+        try {
+            postJsonArray = objectMapper.readTree(new File(postJsonFilePath));
+        } catch (IOException e) {
+            System.err.println("Error occurred while reading post json file");
+            return;
+        }
+
+        if (postJsonArray.isArray()) {
+            ArrayNode postJsonarrayNode = (ArrayNode) postJsonArray;
+
+            List<String> featureIdStrings = new ArrayList<>();
+            StringBuilder idsBuilder = new StringBuilder();
+            int count = 0;
+
+            for (JsonNode jsonNode : postJsonarrayNode) {
+                if (jsonNode.has("tags")) {
+                    JsonNode tagsArray = jsonNode.get("tags");
+                    if (tagsArray.isArray()) {
+                        for (JsonNode tagNode : tagsArray) {
+                            String tagsId = tagNode.asText();
+
+                            if (count < 10) {
+                                if (!idsBuilder.isEmpty()) {
+                                    idsBuilder.append(",");
+                                }
+                                idsBuilder.append(tagsId);
+                                count++;
+                            }
+
+                            if (count == 10) {
+                                featureIdStrings.add(idsBuilder.toString());
+                                idsBuilder = new StringBuilder(); // Reset the builder for next group
+                                count = 0; // Reset count for next group
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Add any remaining IDs that didn't make up a full group of 10
+            if (count > 0) {
+                featureIdStrings.add(idsBuilder.toString());
+            }
+
+            boolean isFirstWrite = true;
+            for (String idGrp : featureIdStrings) {
+                Utils.downloadSpecificMediaData("tags", tagJsonFilePath,
+                        "&_fields=id,name&include=" + idGrp, siteUrl, isFirstWrite);
+                isFirstWrite = false;
+            }
+            // Correct Json File Formatting
+            // After the loop, add the closing bracket if necessary
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(tagJsonFilePath, true))) {
+                writer.write("]");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

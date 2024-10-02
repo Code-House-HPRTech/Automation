@@ -1,6 +1,6 @@
 package com.codehouse.step;
 
-import com.codehouse.contants.SiteInfo;
+import com.codehouse.dto.SiteInfo;
 import com.codehouse.contants.Constant;
 import com.codehouse.service.MediaService;
 import com.codehouse.util.Utils;
@@ -8,7 +8,8 @@ import com.codehouse.util.WordPressUtils;
 
 public class S2_RequiredMediaJson {
     public static void main(String[] args) {
-        performAction(SiteDataConstant.getSiteInfo());
+        // Call actual Service
+        SiteDataConstant.getSiteList().forEach(S2_RequiredMediaJson::performAction);
     }
 
     public static void performAction(SiteInfo siteInfo) {

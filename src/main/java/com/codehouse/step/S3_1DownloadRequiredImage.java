@@ -1,12 +1,12 @@
 package com.codehouse.step;
 
-import com.codehouse.contants.SiteInfo;
+import com.codehouse.dto.SiteInfo;
 import com.codehouse.contants.Constant;
 import com.codehouse.service.MediaService;
 
 public class S3_1DownloadRequiredImage {
     public static void main(String[] args) {
-        performAction(SiteDataConstant.getSiteInfo());
+        SiteDataConstant.getSiteList().forEach(S3_1DownloadRequiredImage::performAction);
     }
 
     public static void performAction(SiteInfo siteInfo) {

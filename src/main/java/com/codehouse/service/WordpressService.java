@@ -19,7 +19,7 @@ public class WordpressService {
             Utils.downloadData("posts", String.format(Constant.POSTS_JSON_FILE_PATH, folderName), dataRange + "&_fields=id,title,content,excerpt,featured_media,categories,date,slug,tags,status", siteUrl);
             // Utils.downloadData("pages", String.format(Constant.PAGES_JSON_FILE_PATH, folderName), "", siteUrl);
             Utils.downloadData("categories", String.format(Constant.CATEGORIES_JSON_FILE_PATH, folderName), "&_fields=id,name", siteUrl);
-            Utils.downloadData("tags", String.format(Constant.TAGS_JSON_FILE_PATH, folderName), "&_fields=id,name", siteUrl);
+            // Utils.downloadData("tags", String.format(Constant.TAGS_JSON_FILE_PATH, folderName), "&_fields=id,name", siteUrl);
 
             if (operationType.contains("_MEDIA")) {
                 // Download Media Json
@@ -28,6 +28,13 @@ public class WordpressService {
         }
 
         if (Constant.OperationType._2_DOWNLOAD_REQUIRED_MEDIA_JSON_BY_POST.equals(operationType)) {
+            // Download Required Tag
+            MediaService.downloadRequiredTagByPost(
+                    String.format(Constant.POSTS_JSON_FILE_PATH, folderName),
+                    String.format(Constant.TAGS_JSON_FILE_PATH, folderName),
+                    siteUrl
+            );
+
             // Download Required Media
             MediaService.downloadRequiredMediaByPost(
                     String.format(Constant.POSTS_JSON_FILE_PATH, folderName),

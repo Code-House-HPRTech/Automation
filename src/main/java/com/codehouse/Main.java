@@ -1,7 +1,7 @@
 package com.codehouse;
 
 import com.codehouse.contants.Constant;
-import com.codehouse.contants.SiteInfo;
+import com.codehouse.dto.SiteInfo;
 import com.codehouse.service.WordpressService;
 
 import java.io.IOException;
