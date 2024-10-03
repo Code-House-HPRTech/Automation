@@ -4,7 +4,9 @@ import com.codehouse.dto.SiteInfo;
 import com.codehouse.contants.Constant;
 import com.codehouse.service.CategoryAndTagService;
 import com.codehouse.service.CsvConverterService;
+import com.codehouse.service.FeatureImageService;
 import com.codehouse.service.PowerShellService;
+import com.codehouse.util.Utils;
 
 public class S4_UpdatePostJsonAndCsv {
     public static void main(String[] args) {
@@ -30,13 +32,18 @@ public class S4_UpdatePostJsonAndCsv {
                     String.format(Constant.POSTS_JSON_FILE_PATH, folderName));
         }
 
-//        {
-//            // Update feature image media id
-//            FeatureImageService.updateFeatureImageId(
-//                    String.format(Constant.MEDIA_JSON_FILE_PATH, folderName),
-//                    String.format(Constant.MY_MEDIA_JSON_FILE_PATH, folderName),
-//                    String.format(Constant.POSTS_JSON_FILE_PATH, folderName));
-//        }
+        {
+            Utils.copyFile(
+                    Constant.COMMON_MEDIA_JSON_FILE_PATH,
+                    String.format(Constant.MY_MEDIA_JSON_FILE_PATH, folderName)
+            );
+
+            // Update feature image media id
+            FeatureImageService.updateFeatureImageId(
+                    String.format(Constant.MEDIA_JSON_FILE_PATH, folderName),
+                    String.format(Constant.MY_MEDIA_JSON_FILE_PATH, folderName),
+                    String.format(Constant.POSTS_JSON_FILE_PATH, folderName));
+        }
 
         {
             // Create Batch CSV file
